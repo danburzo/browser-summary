@@ -87,7 +87,7 @@
 	<script>
 
 		let mq = key => () => {
-			let start = 0, end = Number.MAX_SAFE_INTEGER, res;
+			let start = 0, end = 1 * 1000 * 1000, res;
 			while(end - start > 1) {
 				let middle = Math.floor(start + (end - start) / 2);
 				if (matchMedia(`(${key}: ${middle}px)`).matches) {
