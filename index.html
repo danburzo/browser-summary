@@ -14,15 +14,19 @@
 			font-family: 'Monaco';
 		}
 
-		#refresh {
-			position: fixed;
-			top: 10px;
-			right: 10px;
+		.floating {
+			position: -webkit-sticky;
+			position: sticky;
+			top: 0;
+			background: #fff;
+			padding: 1rem;
+			border-bottom: 1px solid;
 		}
 	</style>
 </head>
 <body style='font-size: 1rem'>
 
+<div class='floating'>
 <label>
 	<code>html { font-size: </code>
 		<select id='rem'>
@@ -44,30 +48,13 @@
 		</select> 
 	<code> }</code>
 </label>	
+<button id='refresh'>Refresh</button>
+</div>
 
 	<article id='summary'>
 		<div>
 
-			<h3>User agent</h3>
-			<p><code data-prop='ua'></code></p>
-
-			<h3>Window size</h3>
-			<p>
-				<code>outerWidth</code> &times; <code>outerHeight</code>:
-				<code data-prop='w-outer-width'></code> &times; 
-				<code data-prop='w-outer-height'></code>
-			</p>
-
-			<p>
-				<code>innerWidth</code> &times; <code>innerHeight</code>:
-				<code data-prop='w-inner-width'></code> &times; 
-				<code data-prop='w-inner-height'></code>
-			</p>
-
-			<h3>CSS units</h3>
 			
-			<p><code>1rem</code> = <code data-prop='one-rem'></code></p>
-
 
 			<h3>Media Queries</h3>
 
@@ -84,7 +71,7 @@
 							<code>min-width</code>*
 						</td>
 						<td>
-							<code data-prop='mq-min-w-px'></code> or <code data-prop='mq-min-w-rem'></code> 
+							<code data-prop='mq-min-w-px'></code> or <code data-prop='mq-min-w-rem'></code> or <code data-prop='mq-min-w-em'></code> 
 						</td>
 					</tr>
 					<tr>
@@ -114,22 +101,46 @@
 				</tbody>
 			</table>
 
-			<p>In media queries, <code>1rem</code> ~ <code data-prop='mq-rem-px'></code>px</p>
+			<p>In media queries, <code>1rem</code> ~ <code data-prop='mq-rem-px'></code>px, while <code>1em</code> ~ <code data-prop='mq-em-px'></code>px</p>
 
 			<p>* Largest value that matches via binary search.</p>
 
-			<button id='refresh'>Refresh</button>
+			<h3>User agent</h3>
+			<p><code data-prop='ua'></code></p>
+
+			<h3>Window size</h3>
+			<p>
+				<code>outerWidth</code> &times; <code>outerHeight</code>:
+				<code data-prop='w-outer-width'></code> &times; 
+				<code data-prop='w-outer-height'></code>
+			</p>
+
+			<p>
+				<code>innerWidth</code> &times; <code>innerHeight</code>:
+				<code data-prop='w-inner-width'></code> &times; 
+				<code data-prop='w-inner-height'></code>
+			</p>
+
+			<h3>CSS units</h3>
+			
+			<p><code>1rem</code> = <code data-prop='one-rem'></code></p>
+
 		</div>
 	</article>
 
 	<script>
+
+		function toPrecision(value, precision) {
+			return Math.round(value * (precision = Math.pow(10, precision))) / precision;
+		}
+
 
 		function evaluate() {
 
 			let mq = (key, unit) => {
 
 				let start = 0;
-				let end = unit === 'rem' ? 1 * 1000 * 100 : 1 * 1000 * 1000;
+				let end = unit === 'px' ? 1 * 1000 * 1000 : 1 * 1000 * 100;
 
 				return () => {
 					let iteration = 0;
@@ -144,7 +155,8 @@
 					if (iteration >= 1000) {
 						alert(`binary search infinite loop: ${start} / ${end}`);
 					}
-					return unit === 'rem' ? `${start}${unit}` : `${Math.round(start)}${unit}`;
+					return unit === 'px' ? 
+						`${Math.round(start)}${unit}` : `${toPrecision(start, 2)}${unit}`;
 				}
 			};
 
@@ -157,6 +169,7 @@
 				'one-rem': () => getComputedStyle(document.body).fontSize,
 				'mq-min-w-px': mq('min-width', 'px'),
 				'mq-min-w-rem': mq('min-width', 'rem'),
+				'mq-min-w-em': mq('min-width', 'em'),
 				'mq-min-h-px': mq('min-height', 'px'),
 				'mq-min-h-rem': mq('min-height', 'rem'),
 				'mq-min-dw-px': mq('min-device-width', 'px'),
@@ -167,6 +180,11 @@
 					let px = parseFloat(mq('min-width', 'px')().replace(/px$/, ''));
 					let rem = parseFloat(mq('min-width', 'rem')().replace(/rem$/, ''));
 					return Math.round(px/rem);
+				},
+				'mq-em-px': () => {
+					let px = parseFloat(mq('min-width', 'px')().replace(/px$/, ''));
+					let em = parseFloat(mq('min-width', 'em')().replace(/em$/, ''));
+					return Math.round(px/em);
 				}
 			};
 
