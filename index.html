@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Browser Summary</title>
+</head>
+<body>
+
+	<article id='summary'>
+		<div>
+			<h3>Outer size</h3>
+			<p>
+				<code>window.outerWidth</code> &times; <code>window.outerHeight</code>:
+				<code data-prop='w-outer-width'></code> &times; 
+				<code data-prop='w-outer-height'></code>
+			</p>
+
+			<p>
+				<code>window.innerWidth</code> &times; <code>window.innerHeight</code>:
+				<code data-prop='w-inner-width'></code> &times; 
+				<code data-prop='w-inner-height'></code>
+			</p>
+
+			<p><code>1rem</code> = <code data-prop='one-rem'></code></p>
+		</div>
+	</article>
+
+	<script>
+		let props = {
+			'w-outer-width': () => window.outerWidth,
+			'w-outer-height': () => window.outerHeight,
+			'w-inner-width': () => window.innerWidth,
+			'w-inner-height': () => window.innerHeight,
+			'one-rem': () => getComputedStyle(document.documentElement).fontSize
+		};
+
+		Object.entries(props).forEach(([k, v]) => {
+			document.querySelector(`[data-prop=${k}]`).innerText = v();
+		});
+	</script>
+</body>
+</html>
