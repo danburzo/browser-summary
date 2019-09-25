@@ -7,32 +7,109 @@
 </head>
 <body>
 
+	<div id='dummy' style='font-size: 1rem'></div>
+
 	<article id='summary'>
 		<div>
-			<h3>Outer size</h3>
+
+			<h3>User agent</h3>
+			<p><code data-prop='ua'></code></p>
+
+			<h3>Window size</h3>
 			<p>
-				<code>window.outerWidth</code> &times; <code>window.outerHeight</code>:
+				<code>outerWidth</code> &times; <code>outerHeight</code>:
 				<code data-prop='w-outer-width'></code> &times; 
 				<code data-prop='w-outer-height'></code>
 			</p>
 
 			<p>
-				<code>window.innerWidth</code> &times; <code>window.innerHeight</code>:
+				<code>innerWidth</code> &times; <code>innerHeight</code>:
 				<code data-prop='w-inner-width'></code> &times; 
 				<code data-prop='w-inner-height'></code>
 			</p>
 
+			<h3>CSS units</h3>
+			
 			<p><code>1rem</code> = <code data-prop='one-rem'></code></p>
+
+
+			<h3>Media Queries</h3>
+
+			<table>
+				<thead>
+					<tr>
+						<th>Media Query</th>
+						<th>Value</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<code>min-width</code>*
+						</td>
+						<td>
+							<code data-prop='mq-min-w'></code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>min-height</code>*
+						</td>
+						<td>
+							<code data-prop='mq-min-h'></code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>min-device-width</code>*
+						</td>
+						<td>
+							<code data-prop='mq-min-dw'></code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>min-device-height</code>*
+						</td>
+						<td>
+							<code data-prop='mq-min-dh'></code>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>* Largest value that matches.</p>
+
+			
 		</div>
 	</article>
 
 	<script>
+
+		let mq = key => () => {
+			let start = 0, end = Number.MAX_SAFE_INTEGER, res;
+			while(end - start > 1) {
+				let middle = Math.floor(start + (end - start) / 2);
+				if (matchMedia(`(${key}: ${middle}px)`).matches) {
+					start = middle;
+				} else {
+					end = middle;
+				}
+			}
+			return start;
+		};
+
 		let props = {
+			'ua': () => navigator.userAgent,
 			'w-outer-width': () => window.outerWidth,
 			'w-outer-height': () => window.outerHeight,
 			'w-inner-width': () => window.innerWidth,
 			'w-inner-height': () => window.innerHeight,
-			'one-rem': () => getComputedStyle(document.documentElement).fontSize
+			'one-rem': () => getComputedStyle(document.querySelector('#dummy')).fontSize,
+			'mq-min-w': mq('min-width'),
+			'mq-min-h': mq('min-height'),
+			'mq-min-dw': mq('min-device-width'),
+			'mq-min-dh': mq('min-device-height')
 		};
 
 		Object.entries(props).forEach(([k, v]) => {
