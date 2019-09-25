@@ -86,35 +86,45 @@
 
 	<script>
 
-		let mq = key => () => {
-			let start = 0, end = 1 * 1000 * 1000, res;
-			while(end - start > 1) {
-				let middle = Math.floor(start + (end - start) / 2);
-				if (matchMedia(`(${key}: ${middle}px)`).matches) {
-					start = middle;
-				} else {
-					end = middle;
+		function evaluate() {
+
+			let mq = key => () => {
+				let start = 0, end = 1 * 1000 * 1000, res;
+				let iteration = 0;
+				while(end - start > 1 && ++iteration < 1000) {
+					let middle = Math.floor(start + (end - start) / 2);
+					if (matchMedia(`(${key}: ${middle}px)`).matches) {
+						start = middle;
+					} else {
+						end = middle;
+					}
 				}
-			}
-			return start;
-		};
+				if (iteration >= 1000) {
+					alert(`binary search infinite loop: ${start} / ${end}`);
+				}
+				return start;
+			};
 
-		let props = {
-			'ua': () => navigator.userAgent,
-			'w-outer-width': () => window.outerWidth,
-			'w-outer-height': () => window.outerHeight,
-			'w-inner-width': () => window.innerWidth,
-			'w-inner-height': () => window.innerHeight,
-			'one-rem': () => getComputedStyle(document.querySelector('#dummy')).fontSize,
-			'mq-min-w': mq('min-width'),
-			'mq-min-h': mq('min-height'),
-			'mq-min-dw': mq('min-device-width'),
-			'mq-min-dh': mq('min-device-height')
-		};
+			let props = {
+				'ua': () => navigator.userAgent,
+				'w-outer-width': () => window.outerWidth,
+				'w-outer-height': () => window.outerHeight,
+				'w-inner-width': () => window.innerWidth,
+				'w-inner-height': () => window.innerHeight,
+				'one-rem': () => getComputedStyle(document.querySelector('#dummy')).fontSize,
+				'mq-min-w': mq('min-width'),
+				'mq-min-h': mq('min-height'),
+				'mq-min-dw': mq('min-device-width'),
+				'mq-min-dh': mq('min-device-height')
+			};
 
-		Object.entries(props).forEach(([k, v]) => {
-			document.querySelector(`[data-prop=${k}]`).innerText = v();
-		});
+			Object.entries(props).forEach(([k, v]) => {
+				document.querySelector(`[data-prop=${k}]`).innerText = v();
+			});
+
+		}
+
+		window.onload = evaluate;
 	</script>
 </body>
 </html>
