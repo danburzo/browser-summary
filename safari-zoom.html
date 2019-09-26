@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+
+<style type="text/css">
+	body {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	#zoom {
+		font-size: 3rem;
+	}
+
+	#zoom:after {
+		content: '~ 100%';
+	}
+
+	@media (max-width: 80vw) {
+		#zoom:after {
+			content: '>= 125%';
+		}
+	}
+
+	@media (max-width: 66vw) {
+		#zoom:after {
+			content: '>= 150%';
+		}
+	}
+
+	@media (min-width: 111vw) {
+		#zoom:after {
+			content: '<= 90%';
+		}
+	}
+
+	@media (min-width: 133vw) {
+		#zoom:after {
+			content: '<= 75%';
+		}
+	}
+
+
+</style>
+
+<body>
+
+	<div id='zoom'>Zoom: </div>
+
+</body>
+</html>
