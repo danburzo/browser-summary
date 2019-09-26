@@ -121,6 +121,20 @@
 				<code data-prop='w-inner-height'></code>
 			</p>
 
+			<h3>Screen size</h3>
+
+			<p>
+				<code>availWidth</code> &times; <code>availHeight</code>:
+				<code data-prop='s-avail-w'></code> &times; 
+				<code data-prop='s-avail-h'></code>
+			</p>
+
+			<p>
+				<code>width</code> &times; <code>height</code>:
+				<code data-prop='s-w'></code> &times; 
+				<code data-prop='s-h'></code>
+			</p>
+
 			<h3>CSS units</h3>
 			
 			<p><code>1rem</code> = <code data-prop='one-rem'></code></p>
@@ -166,6 +180,10 @@
 				'w-outer-height': () => window.outerHeight,
 				'w-inner-width': () => window.innerWidth,
 				'w-inner-height': () => window.innerHeight,
+				's-avail-w': () => window.screen.availWidth,
+				's-avail-h': () => window.screen.availHeight,
+				's-w': () => window.screen.width,
+				's-h': () => window.screen.height,
 				'one-rem': () => getComputedStyle(document.body).fontSize,
 				'mq-min-w-px': mq('min-width', 'px'),
 				'mq-min-w-rem': mq('min-width', 'rem'),
