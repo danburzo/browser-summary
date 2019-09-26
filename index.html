@@ -14,10 +14,6 @@
 			font-family: 'Monaco';
 		}
 
-		p {
-			margin: 0;
-		}
-
 		.info {
 			font-size: 0.9em;
 			color: #555;
@@ -42,6 +38,10 @@
 		article {
 			max-width: 40rem;
 			margin: 1rem auto;
+		}
+
+		summary {
+			font-weight: bold;
 		}
 	</style>
 </head>
@@ -73,8 +73,6 @@
 </div>
 
 	<article id='summary'>
-		<div>
-
 			
 
 			<h3>Media Queries</h3>
@@ -133,35 +131,6 @@
 			<p><code>1rem</code> ~ <code data-prop='mq-rem-px'></code>px</p>
 			<p><code>1em</code> ~ <code data-prop='mq-em-px'></code>px</p>
 
-			<h3>User agent</h3>
-			<p><code data-prop='ua'></code></p>
-
-			<h3>CSSOM</h3>
-
-			<p>
-				<code>window.innerWidth</code> &times; <code>window.innerHeight</code>:
-				<code data-prop='w-inner-width'></code> &times; 
-				<code data-prop='w-inner-height'></code>
-			</p>
-
-			<p>
-				<code>window.outerWidth</code> &times; <code>window.outerHeight</code>:
-				<code data-prop='w-outer-width'></code> &times; 
-				<code data-prop='w-outer-height'></code>
-			</p>
-
-			<p>
-				<code>window.screen.availWidth</code> &times; <code>window.screen.availHeight</code>:
-				<code data-prop='s-avail-w'></code> &times; 
-				<code data-prop='s-avail-h'></code>
-			</p>
-
-			<p>
-				<code>window.screen.width</code> &times; <code>window.screen.height</code>:
-				<code data-prop='s-w'></code> &times; 
-				<code data-prop='s-h'></code>
-			</p>
-
 			<h3>CSS units in style declarations</h3>
 
 			<p class='info'>When used to style elements:</p>
@@ -169,7 +138,39 @@
 			<p><code>1rem</code> = <code data-prop='one-rem'></code></p>
 			<p><code>100vw</code> = <code data-prop='hundred-vw'></code></p>
 
-		</div>
+
+			<details>
+				<summary>User agent</summary>
+				<p><code data-prop='ua'></code></p>
+			</details>
+
+			<details>
+				<summary>CSSOM</summary>
+
+				<p>
+					<code>window.innerWidth</code> &times; <code>window.innerHeight</code>:
+					<code data-prop='w-inner-width'></code> &times; 
+					<code data-prop='w-inner-height'></code>
+				</p>
+
+				<p>
+					<code>window.outerWidth</code> &times; <code>window.outerHeight</code>:
+					<code data-prop='w-outer-width'></code> &times; 
+					<code data-prop='w-outer-height'></code>
+				</p>
+
+				<p>
+					<code>window.screen.availWidth</code> &times; <code>window.screen.availHeight</code>:
+					<code data-prop='s-avail-w'></code> &times; 
+					<code data-prop='s-avail-h'></code>
+				</p>
+
+				<p>
+					<code>window.screen.width</code> &times; <code>window.screen.height</code>:
+					<code data-prop='s-w'></code> &times; 
+					<code data-prop='s-h'></code>
+				</p>
+			</details>
 	</article>
 
 	<script>
