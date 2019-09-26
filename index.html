@@ -14,6 +14,15 @@
 			font-family: 'Monaco';
 		}
 
+		p {
+			margin: 0;
+		}
+
+		.info {
+			font-size: 0.9em;
+			color: #555;
+		}
+
 		.floating {
 			position: -webkit-sticky;
 			position: sticky;
@@ -22,9 +31,21 @@
 			padding: 1rem;
 			border-bottom: 1px solid;
 		}
+
+		body {
+			margin: 0;
+			padding: 0;
+			font-size: 1rem;
+			width: 100vw;
+		}
+
+		article {
+			max-width: 40rem;
+			margin: 1rem auto;
+		}
 	</style>
 </head>
-<body style='font-size: 1rem'>
+<body>
 
 <div class='floating'>
 <label>
@@ -71,7 +92,10 @@
 							<code>min-width</code>*
 						</td>
 						<td>
-							<code data-prop='mq-min-w-px'></code> or <code data-prop='mq-min-w-rem'></code> or <code data-prop='mq-min-w-em'></code> 
+							<code data-prop='mq-min-w-px'></code> — 
+							<code data-prop='mq-min-w-rem'></code> — 
+							<code data-prop='mq-min-w-em'></code> —
+							<code data-prop='mq-min-w-vw'></code> 
 						</td>
 					</tr>
 					<tr>
@@ -101,43 +125,49 @@
 				</tbody>
 			</table>
 
-			<p>In media queries, <code>1rem</code> ~ <code data-prop='mq-rem-px'></code>px, while <code>1em</code> ~ <code data-prop='mq-em-px'></code>px</p>
+			<p class='info'>* Largest value that matches, ± a bit of error, via binary search.</p>
 
-			<p>* Largest value that matches via binary search.</p>
+			<h3>Units in media queries</h3>
+
+			<p class='info'>When used in media queries:</p>
+			<p><code>1rem</code> ~ <code data-prop='mq-rem-px'></code>px</p>
+			<p><code>1em</code> ~ <code data-prop='mq-em-px'></code>px</p>
 
 			<h3>User agent</h3>
 			<p><code data-prop='ua'></code></p>
 
-			<h3>Window size</h3>
+			<h3>CSSOM</h3>
+
 			<p>
-				<code>outerWidth</code> &times; <code>outerHeight</code>:
+				<code>window.innerWidth</code> &times; <code>window.innerHeight</code>:
+				<code data-prop='w-inner-width'></code> &times; 
+				<code data-prop='w-inner-height'></code>
+			</p>
+
+			<p>
+				<code>window.outerWidth</code> &times; <code>window.outerHeight</code>:
 				<code data-prop='w-outer-width'></code> &times; 
 				<code data-prop='w-outer-height'></code>
 			</p>
 
 			<p>
-				<code>innerWidth</code> &times; <code>innerHeight</code>:
-				<code data-prop='w-inner-width'></code> &times; 
-				<code data-prop='w-inner-height'></code>
-			</p>
-
-			<h3>Screen size</h3>
-
-			<p>
-				<code>availWidth</code> &times; <code>availHeight</code>:
+				<code>window.screen.availWidth</code> &times; <code>window.screen.availHeight</code>:
 				<code data-prop='s-avail-w'></code> &times; 
 				<code data-prop='s-avail-h'></code>
 			</p>
 
 			<p>
-				<code>width</code> &times; <code>height</code>:
+				<code>window.screen.width</code> &times; <code>window.screen.height</code>:
 				<code data-prop='s-w'></code> &times; 
 				<code data-prop='s-h'></code>
 			</p>
 
-			<h3>CSS units</h3>
+			<h3>CSS units in style declarations</h3>
+
+			<p class='info'>When used to style elements:</p>
 			
 			<p><code>1rem</code> = <code data-prop='one-rem'></code></p>
+			<p><code>100vw</code> = <code data-prop='hundred-vw'></code></p>
 
 		</div>
 	</article>
@@ -185,9 +215,11 @@
 				's-w': () => window.screen.width,
 				's-h': () => window.screen.height,
 				'one-rem': () => getComputedStyle(document.body).fontSize,
+				'hundred-vw': () => getComputedStyle(document.body).width,
 				'mq-min-w-px': mq('min-width', 'px'),
 				'mq-min-w-rem': mq('min-width', 'rem'),
 				'mq-min-w-em': mq('min-width', 'em'),
+				'mq-min-w-vw': mq('min-width', 'vw'),
 				'mq-min-h-px': mq('min-height', 'px'),
 				'mq-min-h-rem': mq('min-height', 'rem'),
 				'mq-min-dw-px': mq('min-device-width', 'px'),
