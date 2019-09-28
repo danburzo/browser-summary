@@ -12,6 +12,15 @@
 		justify-content: center;
 	}
 
+	.floating {
+		position: -webkit-sticky;
+		position: sticky;
+		top: 0;
+		background: #fff;
+		padding: 1rem;
+		border-bottom: 1px solid;
+	}
+
 	#zoom {
 		font-size: 3rem;
 	}
@@ -49,7 +58,44 @@
 
 <body>
 
+	<div class='floating'>
+<label>
+	<code>html { font-size: </code>
+		<select id='rem'>
+			<optgroup label='rem'>
+				<option value='0.75rem'>0.75rem</option>
+				<option value='1rem' selected>1rem</option>
+				<option value='1.25rem'>1.25rem</option>
+			</optgroup>
+
+			<optgroup label='px'>
+				<option value='12px'>12px</option>
+				<option value='16px'>16px</option>
+				<option value='20px'>20px</option>
+			</optgroup>
+
+			<optgroup label='%'>
+				<option value='75%'>75%</option>
+				<option value='100%'>100%</option>
+				<option value='125%'>125%</option>
+			</optgroup>
+
+		</select> 
+	<code> }</code>
+</label>	
+</div>
+
+
 	<div id='zoom'>Zoom: </div>
 
+	<script type="text/javascript">
+		let rem = document.querySelector('#rem');
+		
+		const setRem = () => document.documentElement.style.fontSize = rem.value;
+
+		rem.addEventListener('change', e => {
+			setRem();
+		});
+	</script>
 </body>
 </html>

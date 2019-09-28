@@ -182,78 +182,74 @@
 			return Math.round(value * (precision = Math.pow(10, precision))) / precision;
 		}
 
+		function mq(key, unit) {
+
+			let start = 0;
+			let end = unit === 'px' ? 1 * 1000 * 1000 : 1 * 1000 * 100;
+
+			return function() {
+				let iteration = 0;
+				while(end - start >= 1 && ++iteration < 1000) {
+					let middle = start + (end - start) / 2;
+					let query = '(' + key + ': ' + middle + unit + ')';
+					if (matchMedia(query).matches) {
+						start = middle;
+					} else {
+						end = middle;
+					}
+				}
+				if (iteration >= 1000) {
+					console.error("binary search infinite loop", start, end);
+				}
+				return (unit === 'px' ? Math.round(start) : toPrecision(start, 2)) + unit;
+			}
+		};
+
+		let props = {
+			'ua': function() { return navigator.userAgent },
+			'w-outer-width': function() { return window.outerWidth },
+			'w-outer-height': function() { return window.outerHeight },
+			'w-inner-width': function() { return window.innerWidth },
+			'w-inner-height': function() { return window.innerHeight },
+			's-avail-w': function() { return window.screen.availWidth },
+			's-avail-h': function() { return window.screen.availHeight },
+			's-w': function() { return window.screen.width },
+			's-h': function() { return window.screen.height },
+			'one-rem': function() { return getComputedStyle(document.body).fontSize },
+			'hundred-vw': function() { return getComputedStyle(document.body).width },
+			'mq-min-w-px': mq('min-width', 'px'),
+			'mq-min-w-rem': mq('min-width', 'rem'),
+			'mq-min-w-em': mq('min-width', 'em'),
+			'mq-min-w-vw': mq('min-width', 'vw'),
+			'mq-min-h-px': mq('min-height', 'px'),
+			'mq-min-h-rem': mq('min-height', 'rem'),
+			'mq-min-dw-px': mq('min-device-width', 'px'),
+			'mq-min-dw-rem': mq('min-device-width', 'rem'),
+			'mq-min-dh-px': mq('min-device-height', 'px'),
+			'mq-min-dh-rem': mq('min-device-height', 'rem'),
+			'mq-rem-px': function() { 
+				let px = parseFloat(mq('min-width', 'px')().replace(/px$/, ''));
+				let rem = parseFloat(mq('min-width', 'rem')().replace(/rem$/, ''));
+				return Math.round(px/rem);
+			},
+			'mq-em-px': function() { 
+				let px = parseFloat(mq('min-width', 'px')().replace(/px$/, ''));
+				let em = parseFloat(mq('min-width', 'em')().replace(/em$/, ''));
+				return Math.round(px/em);
+			}
+		};
 
 		function evaluate() {
-
-			let mq = (key, unit) => {
-
-				let start = 0;
-				let end = unit === 'px' ? 1 * 1000 * 1000 : 1 * 1000 * 100;
-
-				return () => {
-					let iteration = 0;
-					while(end - start >= 1 && ++iteration < 1000) {
-						let middle = start + (end - start) / 2;
-						if (matchMedia(`(${key}: ${middle}${unit})`).matches) {
-							start = middle;
-						} else {
-							end = middle;
-						}
-					}
-					if (iteration >= 1000) {
-						alert(`binary search infinite loop: ${start} / ${end}`);
-					}
-					return unit === 'px' ? 
-						`${Math.round(start)}${unit}` : `${toPrecision(start, 2)}${unit}`;
-				}
-			};
-
-			let props = {
-				'ua': () => navigator.userAgent,
-				'w-outer-width': () => window.outerWidth,
-				'w-outer-height': () => window.outerHeight,
-				'w-inner-width': () => window.innerWidth,
-				'w-inner-height': () => window.innerHeight,
-				's-avail-w': () => window.screen.availWidth,
-				's-avail-h': () => window.screen.availHeight,
-				's-w': () => window.screen.width,
-				's-h': () => window.screen.height,
-				'one-rem': () => getComputedStyle(document.body).fontSize,
-				'hundred-vw': () => getComputedStyle(document.body).width,
-				'mq-min-w-px': mq('min-width', 'px'),
-				'mq-min-w-rem': mq('min-width', 'rem'),
-				'mq-min-w-em': mq('min-width', 'em'),
-				'mq-min-w-vw': mq('min-width', 'vw'),
-				'mq-min-h-px': mq('min-height', 'px'),
-				'mq-min-h-rem': mq('min-height', 'rem'),
-				'mq-min-dw-px': mq('min-device-width', 'px'),
-				'mq-min-dw-rem': mq('min-device-width', 'rem'),
-				'mq-min-dh-px': mq('min-device-height', 'px'),
-				'mq-min-dh-rem': mq('min-device-height', 'rem'),
-				'mq-rem-px': () => {
-					let px = parseFloat(mq('min-width', 'px')().replace(/px$/, ''));
-					let rem = parseFloat(mq('min-width', 'rem')().replace(/rem$/, ''));
-					return Math.round(px/rem);
-				},
-				'mq-em-px': () => {
-					let px = parseFloat(mq('min-width', 'px')().replace(/px$/, ''));
-					let em = parseFloat(mq('min-width', 'em')().replace(/em$/, ''));
-					return Math.round(px/em);
-				}
-			};
-
-			Object.entries(props).forEach(([k, v]) => {
-				document.querySelector(`[data-prop=${k}]`).innerText = v();
+			Object.keys(props).forEach(function(k) {
+				document.querySelector("[data-prop='" + k + "']").textContent = props[k]();
 			});
-
+		}
+		
+		function setRem() {
+			document.documentElement.style.fontSize = document.querySelector('#rem').value;
 		}
 
-
-		let rem = document.querySelector('#rem');
-		
-		const setRem = () => document.documentElement.style.fontSize = rem.value;
-
-		rem.addEventListener('change', e => {
+		document.querySelector('#rem').addEventListener('change', function(e) {
 			setRem();
 			evaluate();
 		});
